@@ -18,3 +18,6 @@ Thermometers are line constraints where order matters; digits on thermometers mu
 1 can never be on the end of a constraint, and 9 can never be at the beginning. The longer the line is, the more constrained the cells are. 
 For example, a 7 cell thermometer only has 3 possible candidates for each cell.
 
+### Areas of Further Research
+Beyond the 3 constraints listed above, there is a vast variety of popular constraints. Some other examples include region sum lines, entropy lines, and skyscrapers. The website [Puzzle Madness](https://puzzlemadness.co.uk/) has a great archive of sudokus with different constraints.
+
