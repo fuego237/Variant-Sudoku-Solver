@@ -30,11 +30,8 @@ void Grid::enforce(Constraint& constraint,Position pos, int value) {
 }
 
 void Grid::propagate(Position pos, int value) {
-    //std::cout << "Propagating value " << value << " at position (" << pos.row << ", " << pos.column << ")" << std::endl;
-    //candidates.at(pos.row).at(pos.column).erase(value);
     auto autofill = [&](const Position& position) {
         int new_value = *candidates.at(position.row).at(position.column).begin();
-        std::cout << "Autofilling value " << new_value << " at position (" << position.row << ", " << position.column << ")" << std::endl;
         data.at(position.row).at(position.column) = new_value;
         GridChange change = {position, new_value};
         change_stack.push(change);
@@ -77,10 +74,7 @@ Position Grid::find_empty() {
 }
 
 void Grid::solve() {
-    //std::system("cls");
-    //std::cout << index << std::endl;
     Position pos = find_empty();
-    //std::cout << "Next empty position: (" << pos.row << ", " << pos.column << ")" << std::endl;
     if (pos.row * 9 + pos.column >= 81) {
         solvable = true;
         return;
@@ -95,9 +89,6 @@ void Grid::solve() {
         change_stack.push(change);
         int curr_size = change_stack.size();
         position_stack.pop_back();
-        //system("cls");
-        std::cout << "Trying value " << i << " at position (" << pos.row << ", " << pos.column << ")" << std::endl;
-        //std::cout << "Cells Left: " << position_stack.size() << std::endl;
         // Make the change and propagate constraints
         data.at(pos.row).at(pos.column) = i;
         propagate(pos, i);
@@ -110,18 +101,15 @@ void Grid::solve() {
             propagation_flag = false;
         };
         // Backtrack: undo changes until we reach the current change
-        //std::cout << "Backtracking from position (" << pos.row << ", " << pos.column << ") with value " << i << std::endl;
         while (change_stack.size() > curr_size-1) {
             GridChange last_change = change_stack.top();
             change_stack.pop();
             if (data.at(last_change.position.row).at(last_change.position.column) != 0) {
                 data.at(last_change.position.row).at(last_change.position.column) = 0;
                 position_stack.push_back(last_change.position);
-                //std::cout << "Backtracking on position (" << last_change.position.row << ", " << last_change.position.column << ") with value " << last_change.value << std::endl;
             } 
             candidates.at(last_change.position.row).at(last_change.position.column).insert(last_change.value);
         }
-        std::cout << "Backtracked to position (" << pos.row << ", " << pos.column << ") with value " << i << std::endl;
     }
 };
 
