@@ -69,8 +69,6 @@ class Grid {
         };
 
         void propagate(int row, int column, int value) {
-            //std::cout << "Propagating value " << value << " at position (" << row << ", " << column << ")" << std::endl;
-            //candidates.at(row).at(column).erase(value);
             auto autofill = [&](const std::pair<int, int>& position) {
                 int new_value = *candidates.at(position.first).at(position.second).begin();
                 data.at(position.first).at(position.second) = new_value;
@@ -145,7 +143,6 @@ class Grid {
                     change_stack.pop();
                     if (data.at(last_change.position.first).at(last_change.position.second) != 0) {
                         data.at(last_change.position.first).at(last_change.position.second) = 0;
-                        //std::cout << "Backtracking on position (" << last_change.position.first << ", " << last_change.position.second << ") with value " << last_change.value << std::endl;
                     } 
                     candidates.at(last_change.position.first).at(last_change.position.second).insert(last_change.value);
                 }
