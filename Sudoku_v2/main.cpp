@@ -34,15 +34,6 @@ class Grid {
             }
         };
 
-        void log(int sleep = 100) {
-            system("cls");
-            print_grid();
-            std::cout << "\n" << std::endl;
-            if (sleep > 0) {
-                std::this_thread::sleep_for(std::chrono::milliseconds(sleep));
-            }
-        }
-
         std::vector<std::pair<int, int>> get_row_positions(int row, int column) {
             std::vector<std::pair<int, int>> positions;
             for (int i=0; i<9; i++) {
@@ -143,7 +134,6 @@ class Grid {
                 // Make the change and propagate constraints
                 data.at(index/9).at(index%9) = i;
                 propagate(index/9,index%9,i);
-                //log(100);
 
                 solve(find_empty(index+1));
                 if (solvable) {
@@ -159,7 +149,6 @@ class Grid {
                     } 
                     candidates.at(last_change.position.first).at(last_change.position.second).insert(last_change.value);
                 }
-                //log(100);
 
 
             }
@@ -207,23 +196,27 @@ class Grid {
 };
 
 int main() {
-    std::string str_grid = "0,5,0 | 0,9,2 | 0,0,0"
-                           "0,6,0 | 4,0,8 | 0,0,2"
-                           "0,0,0 | 0,0,0 | 0,0,0"
+    std::string str_grid = "0,1,2 | 0,7,0 | 0,0,3"
+                           "0,0,0 | 1,0,4 | 2,0,0"
+                           "3,0,6 | 0,0,0 | 0,7,0"
                            "_____________________"
-                           "0,0,0 | 3,0,0 | 6,5,0"
-                           "0,0,3 | 0,0,0 | 4,8,0"
-                           "8,1,0 | 0,0,0 | 0,0,7"
+                           "0,0,0 | 4,0,0 | 0,0,5"
+                           "1,9,4 | 0,2,8 | 0,3,0"
+                           "0,8,3 | 0,1,0 | 0,0,0"
                            "_____________________"
-                           "0,0,0 | 0,7,0 | 2,0,0"
-                           "2,0,0 | 6,0,5 | 8,0,0"
-                           "7,0,0 | 0,0,9 | 0,6,0";
-    for (int i=1; i<2; i++) {
-        std::cout << i << std::endl;
-        Grid grid1(str_grid);
-        grid1.full_solve();
+                           "7,0,0 | 0,0,0 | 0,0,8"
+                           "0,0,0 | 0,0,2 | 0,0,0"
+                           "0,0,8 | 0,0,0 | 4,0,0";
+    Grid grid1(str_grid);
+    auto start = std::chrono::steady_clock::now();
+    grid1.full_solve();
+    auto end = std::chrono::steady_clock::now();
+    if (grid1.solvable) {
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        std::cout << "Solve time: " << duration.count() << " microseconds\n";
         grid1.print_grid();
     }
+    return 0;
 }
 
     
