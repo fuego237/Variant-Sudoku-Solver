@@ -15,17 +15,17 @@
 #include "grid.h"
 
 int main() {
-    std::string str_grid = "0,0,0 | 0,0,2 | 1,0,4"
-                           "0,0,8 | 0,0,1 | 0,0,3"
-                           "5,0,0 | 0,6,0 | 0,9,0"
+    std::string str_grid = "0,1,2 | 0,7,0 | 0,0,3"
+                           "0,0,0 | 1,0,4 | 2,0,0"
+                           "3,0,6 | 0,0,0 | 0,7,0"
                            "_____________________"
-                           "0,9,0 | 0,8,0 | 0,4,6"
-                           "6,0,0 | 7,0,0 | 0,0,0"
-                           "1,0,0 | 0,0,0 | 0,8,0"
+                           "0,0,0 | 4,0,0 | 0,0,5"
+                           "1,9,4 | 0,2,8 | 0,3,0"
+                           "0,8,3 | 0,1,0 | 0,0,0"
                            "_____________________"
-                           "0,3,7 | 2,0,0 | 0,1,9"
-                           "0,0,0 | 0,0,0 | 0,3,0"
-                           "0,0,0 | 0,9,0 | 0,0,0";
+                           "7,0,0 | 0,0,0 | 0,0,8"
+                           "0,0,0 | 0,0,2 | 0,0,0"
+                           "0,0,8 | 0,0,0 | 4,0,0";
 
     std::vector<std::unique_ptr<Constraint>> constraints;
 
@@ -35,10 +35,14 @@ int main() {
     constraints.emplace_back(std::make_unique<BoxConstraint>());
 
     Grid grid1(str_grid, std::move(constraints));
-
-    std::cout << "Grid created" << std::endl;
+    auto start = std::chrono::steady_clock::now();
     grid1.full_solve();
-    grid1.print_grid();
+    auto end = std::chrono::steady_clock::now();
+    if (grid1.solvable) {
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        std::cout << "Solve time: " << duration.count() << " microseconds\n";
+        grid1.print_grid();
+    }
     return 0;
 }
 

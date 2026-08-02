@@ -29,14 +29,11 @@ void Grid::enforce(Constraint& constraint, int row, int column, int value) {
 }
 
 void Grid::propagate(int row, int column, int value) {
-    //std::cout << "Propagating value " << value << " at position (" << row << ", " << column << ")" << std::endl;
-    //candidates.at(row).at(column).erase(value);
     auto autofill = [&](const std::pair<int, int>& position) {
         int new_value = *candidates.at(position.first).at(position.second).begin();
         data.at(position.first).at(position.second) = new_value;
         GridChange change = {position, new_value};
         change_stack.push(change);
-        //std::cout << "Autofilling value " << new_value << " at position (" << position.first << ", " << position.second << ")" << std::endl;
         propagate(position.first, position.second, new_value);
     };
 
@@ -82,9 +79,6 @@ void Grid::solve(int index) {
         change_stack.push(change);
         int curr_size = change_stack.size();
 
-        //std::cout << "Trying value " << i << " at position (" << index/9 << ", " << index%9 << ")" << std::endl;
-        //std::cout << "Is 7 in candidates for (8,7)? " << (candidates.at(8).at(7).count(7) ? "Yes" : "No") << std::endl;
-        //std::cout << "\n" << std::endl;
         // Make the change and propagate constraints
         data.at(index/9).at(index%9) = i;
         propagate(index/9,index%9,i);
@@ -100,7 +94,6 @@ void Grid::solve(int index) {
             change_stack.pop();
             if (data.at(last_change.position.first).at(last_change.position.second) != 0) {
                 data.at(last_change.position.first).at(last_change.position.second) = 0;
-                //std::cout << "Backtracking on position (" << last_change.position.first << ", " << last_change.position.second << ") with value " << last_change.value << std::endl;
             } 
             candidates.at(last_change.position.first).at(last_change.position.second).insert(last_change.value);
         }
